@@ -7,4 +7,11 @@
 
     <context:component-scan base-package="com.kirilo.spring.*"/>
     <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/springdb"/>
+        <property name="username" value="root"/>
+        <property name="password" value="toot"/>
+    </bean>
 </beans>
