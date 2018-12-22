@@ -17,7 +17,8 @@ import java.util.List;
 @Component("sqliteDAO")
 public class SQLiteDAO implements MP3Dao {
     private JdbcTemplate jdbcTemplate;
-    private final String SQL = "insert into mp3 (author, name) values (?, ?)";
+    private final String SQL_INSERT = "insert into mp3 (author, name) values (?, ?)";
+    private final String SQL_DELETE = "delete from mp3 where id=?";
 
     @Autowired
     public void setDataSource(DataSource dataSource) {
@@ -26,13 +27,18 @@ public class SQLiteDAO implements MP3Dao {
 
     @Override
     public void insert(MP3 mp3) {
-        jdbcTemplate.update(SQL, new Object[]{mp3.getAuthor(), mp3.getName()});
+        jdbcTemplate.update(SQL_INSERT, new Object[]{mp3.getAuthor(), mp3.getName()});
+    }
+
+    @Override
+    public void insert(List<MP3> list) {
+        list.forEach(mp3 -> insert(mp3));
     }
 
     public void insertWithJDBCAnother(MP3 mp3) {
         DBConnector dbConnector = new DBConnector();
 
-        try(PreparedStatement preparedStatement = dbConnector.getMyConnection().prepareStatement(SQL)) {
+        try(PreparedStatement preparedStatement = dbConnector.getMyConnection().prepareStatement(SQL_INSERT)) {
             preparedStatement.setString(1, mp3.getAuthor());
             preparedStatement.setString(2, mp3.getName());
             preparedStatement.execute();
@@ -41,13 +47,14 @@ public class SQLiteDAO implements MP3Dao {
         }
     }
 
+    //14 strings
     public void insertWithJDBC(MP3 mp3) {
         String url = "jdbc:postgresql://localhost:5432/springdb";
         String login = "root";
         String pass = "root";
 
         try(Connection connection = DriverManager.getConnection(url, login, pass);
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT)) {
             Class.forName("org.postgresql.Driver");
             preparedStatement.setString(1, mp3.getAuthor());
             preparedStatement.setString(2, mp3.getName());
@@ -61,12 +68,22 @@ public class SQLiteDAO implements MP3Dao {
 
     @Override
     public void delete(MP3 mp3) {
+        delete(mp3.getId());
+    }
 
+    @Override
+    public boolean delete(int id) {
+        return jdbcTemplate.update(SQL_DELETE, new Object[]{id}) == 1;
     }
 
     @Override
     public MP3 getMP3ById(int id) {
         return null;
+    }
+
+    @Override
+    public int getMP3Count() {
+        return 0;
     }
 
     @Override
