@@ -3,15 +3,20 @@ package com.kirilo.spring.dao.impls;
 import com.kirilo.spring.dao.interfaces.MP3Dao;
 import com.kirilo.spring.dao.objects.MP3;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Component("sqliteDAONamed")
 public class SQLiteDAONamedParameter implements MP3Dao {
@@ -24,6 +29,7 @@ public class SQLiteDAONamedParameter implements MP3Dao {
     private final String SQL_SELECT_NAME = "select * from mp3 where upper(name) like :name";
     private final String SQL_SELECT_AUTHOR = "select * from mp3 where upper(author) like :author";
     private final String SQL_COUNT = "select count(*) from mp3";
+    private final String SQL_COUNT_TRACKS = "select author, count(id) as count from mp3 group by author";
 
     @Autowired
     public void setDataSource(DataSource dataSource) {
@@ -31,17 +37,35 @@ public class SQLiteDAONamedParameter implements MP3Dao {
     }
 
     @Override
-    public void insert(MP3 mp3) {
+    public int insert(MP3 mp3) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("name", mp3.getName());
         source.addValue("author", mp3.getAuthor());
 
-        jdbcTemplate.update(SQL_INSERT, source);
+//        jdbcTemplate.update(SQL_INSERT, source);
+        jdbcTemplate.update(SQL_INSERT, source, keyHolder, new String[]{"id"});
+        return keyHolder.getKey().intValue();
     }
 
     @Override
     public void insert(List<MP3> list) {
         list.forEach(mp3 -> insert(mp3));
+    }
+
+    @Override
+    public Map<String, Integer> getStat() {
+
+        return jdbcTemplate.query(SQL_COUNT_TRACKS, (ResultSetExtractor<Map<String, Integer>>) rs -> {
+            TreeMap<String, Integer> map = new TreeMap<>();
+            while (rs.next()) {
+                String author = rs.getString("author");
+                int count = rs.getInt("count");
+                map.put(author, count);
+            }
+            return map;
+        });
     }
 
     @Override
@@ -79,7 +103,7 @@ public class SQLiteDAONamedParameter implements MP3Dao {
     @Override
     public List<MP3> getMP3ListByAuthor(String author) {
         MapSqlParameterSource source = new MapSqlParameterSource();
-        source.addValue("author","%" + author.toUpperCase() + "%");
+        source.addValue("author", "%" + author.toUpperCase() + "%");
         return jdbcTemplate.query(SQL_SELECT_AUTHOR, source, new MP3RowMapper());
     }
 

@@ -5,6 +5,8 @@ import com.kirilo.spring.dao.interfaces.MP3Dao;
 import com.kirilo.spring.dao.objects.MP3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -13,6 +15,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Component("sqliteDAO")
 public class SQLiteDAO implements MP3Dao {
@@ -26,13 +29,21 @@ public class SQLiteDAO implements MP3Dao {
     }
 
     @Override
-    public void insert(MP3 mp3) {
-        jdbcTemplate.update(SQL_INSERT, new Object[]{mp3.getAuthor(), mp3.getName()});
+    public int insert(MP3 mp3) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+//        jdbcTemplate.update(SQL_INSERT, new Object[]{mp3.getAuthor(), mp3.getName()});
+        jdbcTemplate.update(SQL_INSERT, new Object[]{mp3.getAuthor(), mp3.getName()}, keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
     @Override
     public void insert(List<MP3> list) {
         list.forEach(mp3 -> insert(mp3));
+    }
+
+    @Override
+    public Map<String, Integer> getStat() {
+        return null;
     }
 
     public void insertWithJDBCAnother(MP3 mp3) {
