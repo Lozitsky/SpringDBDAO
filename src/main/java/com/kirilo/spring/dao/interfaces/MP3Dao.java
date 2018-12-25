@@ -8,6 +8,11 @@ import java.util.Map;
 public interface MP3Dao {
     int insert (MP3 mp3);
     void  insert(List<MP3> list);
+
+    int insertList(List<MP3> listMP3);
+
+    int updateList(List<MP3> listMP3);
+
     Map<String, Integer> getStat();
     void  delete (MP3 mp3);
     boolean delete(int id);

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Component("sqliteDAONamed")
+@Component("postgresDAONamed")
 public class SQLiteDAONamedParameter implements MP3Dao {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -52,6 +52,16 @@ public class SQLiteDAONamedParameter implements MP3Dao {
     @Override
     public void insert(List<MP3> list) {
         list.forEach(mp3 -> insert(mp3));
+    }
+
+    @Override
+    public int insertList(List<MP3> listMP3) {
+        return 0;
+    }
+
+    @Override
+    public int updateList(List<MP3> listMP3) {
+        return 0;
     }
 
     @Override

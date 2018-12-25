@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Start {
+public class StartSimpleJDBCInsert {
     public static void main(String[] args) {
         MP3 mp3 = new MP3();
         mp3.setName("Some song");
@@ -26,18 +26,14 @@ public class Start {
         List<MP3> list = new ArrayList<>();
         list.addAll(Arrays.asList(mp3, mp3_2, mp3_3));
 
-//        new SQLiteDAO().insertWithJDBC(mp3);
-
-//        new SQLiteDAO().insertWithJDBCAnother(mp3);
-
         ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
-//        SQLiteDAO sqliteDAO = (SQLiteDAO) context.getBean("sqliteDAO");
-        MP3Dao postgresDAONamed = (MP3Dao) context.getBean("postgresDAONamed");
-//        sqliteDAO.insert(mp3);
-//        sqliteDAO.delete(9);
-//        sqliteDAO.insert(list);
-        System.out.println(postgresDAONamed.getMP3ListByAuthor("KAZKA"));
-        System.out.println(postgresDAONamed.getMP3Count());
-    }
+        MP3Dao simpleJdbcDAO = (MP3Dao) context.getBean("simpleJdbcDAO");
 
+//        System.out.println(simpleJdbcDAO.insert(mp3));
+//        System.out.println(simpleJdbcDAO.insertList(list));
+        mp3.setId(1);
+        mp3_2.setId(2);
+        mp3_3.setId(3);
+        System.out.println(simpleJdbcDAO.updateList(list));
+    }
 }

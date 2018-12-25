@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-@Component("sqliteDAO")
+@Component("postgresDAO")
 public class SQLiteDAO implements MP3Dao {
     private JdbcTemplate jdbcTemplate;
     private final String SQL_INSERT = "insert into mp3 (author, name) values (?, ?)";
@@ -39,6 +39,16 @@ public class SQLiteDAO implements MP3Dao {
     @Override
     public void insert(List<MP3> list) {
         list.forEach(mp3 -> insert(mp3));
+    }
+
+    @Override
+    public int insertList(List<MP3> listMP3) {
+        return 0;
+    }
+
+    @Override
+    public int updateList(List<MP3> listMP3) {
+        return 0;
     }
 
     @Override
