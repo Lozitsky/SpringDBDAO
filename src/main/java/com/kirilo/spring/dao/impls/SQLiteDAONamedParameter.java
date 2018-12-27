@@ -1,6 +1,7 @@
 package com.kirilo.spring.dao.impls;
 
 import com.kirilo.spring.dao.interfaces.MP3Dao;
+import com.kirilo.spring.dao.objects.Author;
 import com.kirilo.spring.dao.objects.MP3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -117,7 +118,7 @@ public class SQLiteDAONamedParameter implements MP3Dao {
         return jdbcTemplate.query(SQL_SELECT_AUTHOR, source, new MP3RowMapper());
     }
 
-    public static final class MP3RowMapper implements RowMapper<MP3> {
+/*    public static final class MP3RowMapper implements RowMapper<MP3> {
 
         @Override
         public MP3 mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -126,6 +127,22 @@ public class SQLiteDAONamedParameter implements MP3Dao {
             mp3.setAuthor(resultSet.getString("author"));
             mp3.setName(resultSet.getString("name"));
             return mp3;
+        }
+    }*/
+
+    private static final class MP3RowMapper implements RowMapper<MP3> {
+
+        @Override
+        public MP3 mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Author author = new Author();
+            author.setId(rs.getInt("author_id"));
+            author.setName(rs.getString("author_name"));
+
+            MP3 mp3 = new MP3();
+            mp3.setId(rs.getInt("mp3_id"));
+            mp3.setName(rs.getString("mp3_name"));
+            mp3.setAuthor(author);
+            return null;
         }
     }
 }

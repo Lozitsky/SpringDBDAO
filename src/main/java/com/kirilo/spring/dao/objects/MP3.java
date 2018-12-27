@@ -3,7 +3,7 @@ package com.kirilo.spring.dao.objects;
 public class MP3 {
     private int id;
     private String name;
-    private String author;
+    private Author author;
 
     public String getName() {
         return name;
@@ -13,11 +13,11 @@ public class MP3 {
         this.name = name;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 

@@ -13,15 +13,15 @@ public class Start {
     public static void main(String[] args) {
         MP3 mp3 = new MP3();
         mp3.setName("Some song");
-        mp3.setAuthor("Some author");
+//        mp3.setAuthor("Some author");
 
         MP3 mp3_2 = new MP3();
         mp3_2.setName("Some song2");
-        mp3_2.setAuthor("Some author2");
+//        mp3_2.setAuthor("Some author2");
 
         MP3 mp3_3 = new MP3();
         mp3_3.setName("Some song3");
-        mp3_3.setAuthor("Some author3");
+//        mp3_3.setAuthor("Some author3");
 
         List<MP3> list = new ArrayList<>();
         list.addAll(Arrays.asList(mp3, mp3_2, mp3_3));

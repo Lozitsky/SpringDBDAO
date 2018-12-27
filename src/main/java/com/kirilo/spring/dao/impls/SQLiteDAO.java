@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Component("postgresDAO")
 public class SQLiteDAO implements MP3Dao {
+
     private JdbcTemplate jdbcTemplate;
     private final String SQL_INSERT = "insert into mp3 (author, name) values (?, ?)";
     private final String SQL_DELETE = "delete from mp3 where id=?";
@@ -59,8 +60,9 @@ public class SQLiteDAO implements MP3Dao {
     public void insertWithJDBCAnother(MP3 mp3) {
         DBConnector dbConnector = new DBConnector();
 
-        try(PreparedStatement preparedStatement = dbConnector.getMyConnection().prepareStatement(SQL_INSERT)) {
-            preparedStatement.setString(1, mp3.getAuthor());
+        try (PreparedStatement preparedStatement = dbConnector.getMyConnection().prepareStatement(SQL_INSERT)) {
+//            preparedStatement.setString(1, mp3.getAuthor());
+            preparedStatement.setObject(1, mp3.getAuthor());
             preparedStatement.setString(2, mp3.getName());
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -74,10 +76,11 @@ public class SQLiteDAO implements MP3Dao {
         String login = "root";
         String pass = "root";
 
-        try(Connection connection = DriverManager.getConnection(url, login, pass);
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT)) {
+        try (Connection connection = DriverManager.getConnection(url, login, pass);
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT)) {
             Class.forName("org.postgresql.Driver");
-            preparedStatement.setString(1, mp3.getAuthor());
+//            preparedStatement.setString(1, mp3.getAuthor());
+            preparedStatement.setObject(1, mp3.getAuthor());
             preparedStatement.setString(2, mp3.getName());
             preparedStatement.executeUpdate();
         } catch (ClassNotFoundException e) {

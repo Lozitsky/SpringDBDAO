@@ -14,7 +14,7 @@ public class StartResultSetExtractor {
 
         MP3 mp3 = new MP3();
         mp3.setName("Some song");
-        mp3.setAuthor("Some author");
+//        mp3.setAuthor("Some author");
 
         System.out.println(postgresDAONamed.insert(mp3));
         //gets Exception: "org.springframework.dao.EmptyResultDataAccessException: Incorrect result size: expected 1, actual 0"
